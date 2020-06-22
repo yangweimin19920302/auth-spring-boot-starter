@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+    <!-- 数据源缓存配置 -->
+    <cache name="cache"
+           eternal="false"
+           maxElementsInMemory="1000"
+           overflowToDisk="false"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+</ehcache>
+
+        <!--
+        name: cache的名字，用来识别不同的cache，必须惟一
+        eternal: 设定元素是否持久化。若设为true，则缓存元素不会过期。
+        maxElementsInMemory: 内存管理的缓存元素数量最大限值。
+        overflowToDisk: 设定是否在内存填满的时候把数据转到磁盘上。
+        diskPersistent: 设定在虚拟机重启时是否进行磁盘存储。
+        timeToIdleSeconds： 设定元素在过期前空闲状态的时间，只对非持久性缓存对象有效。默认值为0,值为0意味着元素可以闲置至无限长时间。(单位是秒)
+        timeToLiveSeconds: 设定元素从创建到过期的时间。0表示没有过期时间(单位是秒)
+        memoryStoreEvictionPolicy: 元素逐出缓存规则。共有三种，Recently Used (LRU)最近最少使用，为默认。
+        -->
