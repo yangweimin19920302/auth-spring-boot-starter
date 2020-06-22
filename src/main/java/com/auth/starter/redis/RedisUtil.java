@@ -9,7 +9,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisUtil {
 
 	private static JedisPool jedisPool;
-	private static JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+	private static JedisPoolConfig jedisPoolConfig;
 
 	private RedisUtil() {
 
@@ -22,6 +22,7 @@ public class RedisUtil {
 	public synchronized static JedisPool getPool() {
 		if (jedisPool == null) {
 			RedisConfig redisConfig = ConfigurationManagement.getRedisConfig();
+			jedisPoolConfig = new JedisPoolConfig();
 			jedisPoolConfig.setMaxTotal(redisConfig.getMaxTotal());
 			jedisPoolConfig.setMaxIdle(redisConfig.getMaxIdle());
 			jedisPoolConfig.setMaxWaitMillis(redisConfig.getMaxWaitMillis());
