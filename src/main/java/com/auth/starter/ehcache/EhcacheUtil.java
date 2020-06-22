@@ -20,8 +20,8 @@ public class EhcacheUtil {
      * @throws Exception
      */
     public synchronized static CacheManager getCacheManager() {
-        EhcacheConfig ehcacheConfig = ConfigurationManagement.getEhcacheConfig();
         if (cacheManager == null) {
+            EhcacheConfig ehcacheConfig = ConfigurationManagement.getEhcacheConfig();
             cacheManager = CacheManager.create(ehcacheConfig.getUrl(ehcacheConfig.getPath()));
         }
         return cacheManager;

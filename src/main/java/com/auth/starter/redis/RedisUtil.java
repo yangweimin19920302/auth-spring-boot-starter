@@ -20,8 +20,8 @@ public class RedisUtil {
 	 * @return
 	 */
 	public synchronized static JedisPool getPool() {
-		RedisConfig redisConfig = ConfigurationManagement.getRedisConfig();
 		if (jedisPool == null) {
+			RedisConfig redisConfig = ConfigurationManagement.getRedisConfig();
 			jedisPoolConfig.setMaxTotal(redisConfig.getMaxTotal());
 			jedisPoolConfig.setMaxIdle(redisConfig.getMaxIdle());
 			jedisPoolConfig.setMaxWaitMillis(redisConfig.getMaxWaitMillis());
