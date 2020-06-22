@@ -25,12 +25,12 @@ public class Authorization {
      * @throws ConnectErrorException
      */
     public static void auth(JoinPoint joinPoint) throws OutOfDateException, NoPermissionException, ConnectErrorException {
+        /**获取当前用户信息**/
+        SecurityUser securityUser = Subject.getUser();
         /**获取权限控制类型**/
         CollectionType collectionType = AuthenticationInformation.getCollectionType(joinPoint);
         /**获取当前方法所需的权限**/
         String values [] = AuthenticationInformation.getValue(joinPoint);
-        /**获取当前用户信息**/
-        SecurityUser securityUser = Subject.getUser();
         if (values == null || values.length == 0) {
             return;
         }
