@@ -48,7 +48,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * 存储数据
+	 * 存储数据（固定过期时间）
 	 * @param token
 	 * @param object
 	 * @throws Exception
@@ -64,6 +64,35 @@ public class RedisUtil {
 			jedis = pool.getResource();
 			jedis.set(token, object);
 			jedis.pexpire(token, redisConfig.getTimeOut());//设置过期时间
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ConnectErrorException("redis连接错误");
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
+		}
+	}
+
+	/**
+	 * 存储数据（手动设置过期时间）
+	 * @param token
+	 * @param object
+	 * @throws Exception
+	 */
+	public static void add(String token, String object, Long timeout) throws ConnectErrorException {
+		RedisConfig redisConfig = ConfigurationManagement.getRedisConfig();
+		JedisPool pool = RedisUtil.jedisPool;
+		if (pool == null) {
+			pool = getPool();
+		}
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			jedis.set(token, object);
+			if (timeout != null) {
+				jedis.pexpire(token, redisConfig.getTimeOut());//设置过期时间
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ConnectErrorException("redis连接错误");

@@ -12,7 +12,7 @@ import com.auth.starter.redis.RedisUtil;
 public class StorageMediumEntrance {
 
     /**
-     * 插入
+     * 插入(固定过期时间)
      * @param token
      * @param object
      * @throws ConnectErrorException
@@ -20,6 +20,20 @@ public class StorageMediumEntrance {
     public static void add(String token, String object) throws ConnectErrorException {
         if (ConfigurationManagement.getStorageMedium().equals(StorageMedium.REDIS)) {
             RedisUtil.add(token, object);
+        } else {
+            EhcacheUtil.add(token, object);
+        }
+    }
+
+    /**
+     * 插入(手动设置过期时间)
+     * @param token
+     * @param object
+     * @throws ConnectErrorException
+     */
+    public static void add(String token, String object, Long timeout) throws ConnectErrorException {
+        if (ConfigurationManagement.getStorageMedium().equals(StorageMedium.REDIS)) {
+            RedisUtil.add(token, object, timeout);
         } else {
             EhcacheUtil.add(token, object);
         }
