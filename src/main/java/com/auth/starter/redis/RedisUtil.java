@@ -62,8 +62,8 @@ public class RedisUtil {
 		Jedis jedis = null;
 		try {
 			jedis = pool.getResource();
-			jedis.set(token, object);
-			jedis.pexpire(token, redisConfig.getTimeOut());//设置过期时间
+			// NX是不存在时才set， XX是存在时才set， EX是秒，PX是毫秒
+			jedis.set(token, object, "NX", "PX", redisConfig.getTimeOut());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ConnectErrorException("redis连接错误");
@@ -121,6 +121,36 @@ public class RedisUtil {
 			object = jedis.get(token);
 			if (object != null) {
 				jedis.pexpire(token, ConfigurationManagement.getRedisConfig().getTimeOut());//重置过期时间
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ConnectErrorException("redis连接错误");
+		} finally {
+			if (jedis != null) {
+				jedis.close();
+			}
+		}
+		return object;
+	}
+
+	/**
+	 * 获取数据
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	public static String get(String token, Long timeout) throws ConnectErrorException {
+		JedisPool pool = RedisUtil.jedisPool;
+		if (pool == null) {
+			pool = getPool();
+		}
+		Jedis jedis = null;
+		String object;
+		try {
+			jedis = pool.getResource();
+			object = jedis.get(token);
+			if (object != null && timeout != null) {
+				jedis.pexpire(token, timeout);//重置过期时间
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

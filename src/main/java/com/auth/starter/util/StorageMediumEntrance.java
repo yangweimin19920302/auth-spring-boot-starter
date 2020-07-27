@@ -40,13 +40,28 @@ public class StorageMediumEntrance {
     }
 
     /**
-     * 获取
+     * 获取（固定更新时间）
      * @param token
      * @throws ConnectErrorException
      */
     public static String get(String token) throws ConnectErrorException {
         if (ConfigurationManagement.getStorageMedium().equals(StorageMedium.REDIS)) {
             return RedisUtil.get(token);
+        } else {
+            return EhcacheUtil.get(token);
+        }
+    }
+
+    /**
+     * 获取(自定义更新时间)
+     * @param token
+     * @param timeout
+     * @return
+     * @throws ConnectErrorException
+     */
+    public static String get(String token, Long timeout) throws ConnectErrorException {
+        if (ConfigurationManagement.getStorageMedium().equals(StorageMedium.REDIS)) {
+            return RedisUtil.get(token, timeout);
         } else {
             return EhcacheUtil.get(token);
         }
