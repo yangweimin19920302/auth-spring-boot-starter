@@ -5,6 +5,7 @@ import com.auth.starter.exception.ConnectErrorException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.params.SetParams;
 
 public class RedisUtil {
 
@@ -63,7 +64,11 @@ public class RedisUtil {
 		try {
 			jedis = pool.getResource();
 			// NX是不存在时才set， XX是存在时才set， EX是秒，PX是毫秒
-			jedis.set(token, object, "NX", "PX", redisConfig.getTimeOut());
+			jedis.set(token, object, SetParams.setParams().nx().px(redisConfig.getTimeOut()));
+			SetParams setParams = new SetParams();
+			setParams.nx();
+			setParams.px(100);
+			jedis.set(token, object, setParams);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ConnectErrorException("redis连接错误");
@@ -81,7 +86,6 @@ public class RedisUtil {
 	 * @throws Exception
 	 */
 	public static void add(String token, String object, Long timeout) throws ConnectErrorException {
-		RedisConfig redisConfig = ConfigurationManagement.getRedisConfig();
 		JedisPool pool = RedisUtil.jedisPool;
 		if (pool == null) {
 			pool = getPool();
@@ -89,9 +93,11 @@ public class RedisUtil {
 		Jedis jedis = null;
 		try {
 			jedis = pool.getResource();
-			jedis.set(token, object);
-			if (timeout != null) {
-				jedis.pexpire(token, redisConfig.getTimeOut());//设置过期时间
+			if (timeout == null) {
+				jedis.set(token, object);
+			} else {
+				// NX是不存在时才set， XX是存在时才set， EX是秒，PX是毫秒
+				jedis.set(token, object, SetParams.setParams().nx().px(timeout));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
