@@ -64,11 +64,7 @@ public class RedisUtil {
 		try {
 			jedis = pool.getResource();
 			// NX是不存在时才set， XX是存在时才set， EX是秒，PX是毫秒
-			jedis.set(token, object, SetParams.setParams().nx().px(redisConfig.getTimeOut()));
-			SetParams setParams = new SetParams();
-			setParams.nx();
-			setParams.px(100);
-			jedis.set(token, object, setParams);
+			jedis.set(token, object, SetParams.setParams().px(redisConfig.getTimeOut()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ConnectErrorException("redis连接错误");
@@ -97,7 +93,7 @@ public class RedisUtil {
 				jedis.set(token, object);
 			} else {
 				// NX是不存在时才set， XX是存在时才set， EX是秒，PX是毫秒
-				jedis.set(token, object, SetParams.setParams().nx().px(timeout));
+				jedis.set(token, object, SetParams.setParams().px(timeout));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
