@@ -9,6 +9,7 @@ public class RedisConfig extends JedisPoolConfig {
 
     private String ip = "127.0.0.1";
     private int port = 6379;
+    private String password = null;
     //设置redis数据过期时间,单位毫秒
     private long timeOut = 3600000;
 
@@ -26,6 +27,14 @@ public class RedisConfig extends JedisPoolConfig {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getTimeOut() {

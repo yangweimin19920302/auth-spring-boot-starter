@@ -43,7 +43,11 @@ public class RedisUtil {
 			jedisPoolConfig.setTestOnCreate(redisConfig.getTestOnCreate());
 			jedisPoolConfig.setTestOnReturn(redisConfig.getTestOnReturn());
 			jedisPoolConfig.setTestWhileIdle(redisConfig.getTestWhileIdle());
-			jedisPool = new JedisPool(jedisPoolConfig, redisConfig.getIp(), redisConfig.getPort());
+			if (redisConfig.getPassword() != null && redisConfig.getPassword().length() != 0) {
+				jedisPool = new JedisPool(jedisPoolConfig, redisConfig.getIp(), redisConfig.getPort(), 3000, redisConfig.getPassword());
+			} else {
+				jedisPool = new JedisPool(jedisPoolConfig, redisConfig.getIp(), redisConfig.getPort());
+			}
 		}
 		return jedisPool;
 	}
